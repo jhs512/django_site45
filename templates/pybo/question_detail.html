@@ -3,3 +3,29 @@
 <div>
     {{ question.content }}
 </div>
+
+<hr>
+
+<form action="{% url 'pybo:answer_create' question.id %}" method="post">
+    {% csrf_token %}
+    <textarea name="content" rows="15"></textarea>
+    <input type="submit" value="답변등록">
+</form>
+
+{% if question.answer_set.count > 0 %}
+<h5>{{question.answer_set.count}}개의 답변이 있습니다.</h5>
+
+<ul>
+    {% for answer in question.answer_set.all %}
+    <li>
+        {{answer.content}}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+    답변이 없습니다. ㅜ_ㅜ
+{% endif %}
+
+<div>
+    <a href="{% url 'pybo:index' %}">리스트로 돌아가기</a>
+</div>

@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
@@ -7,10 +8,15 @@ from .models import Question
 
 
 def index(request: HttpRequest) -> HttpResponse:
+    page = request.GET.get('page', '1')
+
     question_list = Question.objects.order_by('-id')
 
+    paginator = Paginator(question_list, 10)
+    page_obj = paginator.get_page(page)
+
     return render(request, "pybo/question_list.html", {
-        "question_list": question_list
+        "question_list": page_obj
     })
 
 
